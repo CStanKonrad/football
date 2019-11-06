@@ -90,7 +90,7 @@ def generate_smm(observation, config=None,
         mark_points(frame[o_i, :, :, index],
                     np.array(o[team][o[layer]]).reshape(-1))
       elif layer == 'is_left':
-        frame[o_i, :, :, index] = 1 if o[layer] else 0
+        frame[o_i, :, :, index] = 255 if o[layer] else 0
       else:
         mark_points(frame[o_i, :, :, index], np.array(o[layer]).reshape(-1))
   return frame

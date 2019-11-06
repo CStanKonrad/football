@@ -183,7 +183,7 @@ In addition, environment provides wrappers which convert `raw` observations to a
    - 2nd plane: 255s represent positions of players on the right team
    - 3rd plane: 255s represent positions of a ball
    - 4th plane: 255s represent positions of an active player
-   - 5th plane (optional, available when `enable_sides_swap` is enabled): either all 0s if playing from the left, or all 255s if playing from the right
+   - 5th plane (optional, available when `enable_sides_swap` is enabled): either all 255s if playing from the left, or all 0s if playing from the right
 - `pixels`/`pixels_gray` (aka PixelsStateWrapper) - pixel representation, downscaled to 72 * 96, and converted to a single grayscale channel for `pixels_gray`.
   In order to use this representation you have to enable rendering in create_environment call (and run on GPU).
 
