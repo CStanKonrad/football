@@ -18,16 +18,15 @@
 #ifndef _HPP_STRATEGY_DEFAULT_OFFENSE
 #define _HPP_STRATEGY_DEFAULT_OFFENSE
 
-class ElizaController;
-class MentalImage;
-namespace blunted {
-  class Vector3;
-}
+#include "../strategy.hpp"
 
-class DefaultOffenseStrategy {
+class DefaultOffenseStrategy : public Strategy {
 
   public:
-    void RequestInput(ElizaController *controller, const MentalImage *mentalImage, blunted::Vector3 &direction, float &velocity);
+    DefaultOffenseStrategy(ElizaController *controller);
+    virtual ~DefaultOffenseStrategy();
+
+    virtual void RequestInput(const MentalImage *mentalImage, Vector3 &direction, float &velocity);
 
   protected:
 

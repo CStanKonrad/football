@@ -22,24 +22,12 @@
 
 class PlayerDesc {
  public:
-  PlayerDesc(const std::string& firstName, const std::string& lastName,
-             int value)
-      : firstName_(firstName), lastName_(lastName), value_(value) {
-    DO_VALIDATION;
-  }
-
-  std::string getFirstName() {
-    DO_VALIDATION;
-    return firstName_;
-  }
-  std::string getLastName() {
-    DO_VALIDATION;
-    return lastName_;
-  }
-  int getValue() {
-    DO_VALIDATION;
-    return value_;
-  }
+  PlayerDesc(const std::string& firstName, const std::string& lastName, int value)
+      : firstName_(firstName), lastName_(lastName), value_(value) {}
+  
+  std::string getFirstName() { return firstName_; }
+  std::string getLastName() { return lastName_; }
+  int getValue() { return value_; }
 
  private:
   std::string firstName_;
@@ -47,9 +35,13 @@ class PlayerDesc {
   int value_;
 };
 
-MatchData::MatchData()
-    : teamData{TeamData(3, GetScenarioConfig().left_team),
-               TeamData(8, GetScenarioConfig().right_team)} {
+MatchData::MatchData(int team1DatabaseID, int team2DatabaseID) {
+  auto& scenario = GetScenarioConfig();
+  teamData[0] = new TeamData(team1DatabaseID, team1DatabaseID,
+                             scenario.left_team);
+  teamData[1] = new TeamData(team2DatabaseID, scenario.symmetrical_teams
+      ? team1DatabaseID : team2DatabaseID, scenario.right_team);
+
   std::vector<PlayerDesc> names = {
       PlayerDesc("Ada", "Lovelace", 1),
       PlayerDesc("Alan", "Turing", 0),
@@ -90,22 +82,18 @@ MatchData::MatchData()
   //      PlayerDesc("Hertha", "Ayrton", 1),
   //      PlayerDesc("Caroline", "Herschel", 1),
   //      PlayerDesc("Candace", "Pert", 1),
-  for (int x = 0; x < GetScenarioConfig().left_team.size(); x++) {
-    DO_VALIDATION;
-    PlayerData* player = teamData[0].GetPlayerData(x);
+  for (int x = 0; x < scenario.left_team.size(); x++) {
+    PlayerData* player = teamData[0]->GetPlayerData(x);
     player->UpdateName(names[x].getFirstName(), names[x].getLastName());
     if (names[x].getValue()) {
-      DO_VALIDATION;
       player->SetHairStyle("long02");
       player->SetModelId(1);
     }
   }
-  for (int x = 0; x < GetScenarioConfig().right_team.size(); x++) {
-    DO_VALIDATION;
-    PlayerData* player = teamData[1].GetPlayerData(x);
+  for (int x = 0; x < scenario.right_team.size(); x++) {
+    PlayerData* player = teamData[1]->GetPlayerData(x);
     player->UpdateName(names[x+11].getFirstName(), names[x+11].getLastName());
-    if (names[x + 11].getValue()) {
-      DO_VALIDATION;
+    if (names[x+11].getValue()) {
       player->SetHairStyle("long02");
       player->SetModelId(1);
     }
@@ -113,26 +101,18 @@ MatchData::MatchData()
   goalCount[0] = 0;
   goalCount[1] = 0;
 
+  shots[0] = 0;
+  shots[1] = 0;
+
   possession60seconds = 0.0f;
 }
 
-void MatchData::AddPossessionTime(int teamID, unsigned long time) {
-  DO_VALIDATION;
-  if (teamID == 0) possession60seconds = std::max(possession60seconds - (0.001f * time), -60.0f);
-  else if (teamID == 1) possession60seconds = std::min(possession60seconds + (0.001f * time), 60.0f);
+MatchData::~MatchData() {
+  delete teamData[0];
+  delete teamData[1];
 }
 
-void MatchData::ProcessState(EnvState* state, int first_team) {
-  DO_VALIDATION;
-  state->process(goalCount[first_team]);
-  state->process(goalCount[1 - first_team]);
-  if (first_team == 1) {
-    DO_VALIDATION;
-    possession60seconds = -possession60seconds;
-  }
-  state->process(possession60seconds);
-  if (first_team == 1) {
-    DO_VALIDATION;
-    possession60seconds = -possession60seconds;
-  }
+void MatchData::AddPossessionTime_10ms(int teamID) {
+  if (teamID == 0) possession60seconds = std::max(possession60seconds - 0.01f, -60.0f);
+  else if (teamID == 1) possession60seconds = std::min(possession60seconds + 0.01f, 60.0f);
 }

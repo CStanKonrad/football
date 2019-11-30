@@ -19,10 +19,11 @@
 
 namespace blunted {
 
-Skybox::Skybox(std::string name) : Geometry(name, e_ObjectType_Skybox) {
-  DO_VALIDATION;
-  localMode = e_LocalMode_Absolute;
-}
+  Skybox::Skybox(std::string name) : Geometry(name, e_ObjectType_Skybox) {
+    localMode = e_LocalMode_Absolute;
+  }
 
-Skybox::~Skybox() { DO_VALIDATION; }
+  Skybox::~Skybox() {
+  }
+
 }

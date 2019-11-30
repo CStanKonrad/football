@@ -22,7 +22,6 @@ class PlayerBase(object):
   def __init__(self, player_config=None):
     self._num_left_controlled_players = 1
     self._num_right_controlled_players = 0
-    self._can_play_right = False
     if player_config:
       self._num_left_controlled_players = int(player_config['left_players'])
       self._num_right_controlled_players = int(player_config['right_players'])
@@ -40,5 +39,6 @@ class PlayerBase(object):
   def reset(self):
     pass
 
-  def can_play_right(self):
-    return self._can_play_right
+  def swap_sides(self):
+    self._num_left_controlled_players, self._num_right_controlled_players = (
+        self._num_right_controlled_players, self._num_left_controlled_players)

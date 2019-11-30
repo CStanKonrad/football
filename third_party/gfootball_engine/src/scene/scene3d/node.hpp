@@ -51,40 +51,46 @@ namespace blunted {
                       bool recurse = true, int depth = 0) const;
 
       void GetObjects(std::deque < boost::intrusive_ptr<Object> > &gatherObjects, const vector_Planes &bounding, bool recurse = true, int depth = 0) const;
-      void ProcessState(EnvState* state);
 
       template <class T>
       inline void GetObjects(e_ObjectType targetObjectType, std::list < boost::intrusive_ptr<T> > &gatherObjects, bool recurse = true, int depth = 0) const {
         //objects.Lock();
         int objectsSize = objects.size();
-        for (int i = 0; i < objectsSize; i++) { DO_VALIDATION;
-          if (objects[i]->GetObjectType() == targetObjectType) { DO_VALIDATION;
+        for (int i = 0; i < objectsSize; i++) {
+          if (objects[i]->GetObjectType() == targetObjectType) {
             gatherObjects.push_back(static_pointer_cast<T>(objects[i]));
           }
         }
+        //objects.Unlock();
 
-        if (recurse) { DO_VALIDATION;
+        if (recurse) {
+          //nodes.Lock();
           int nodesSize = nodes.size();
-          for (int i = 0; i < nodesSize; i++) { DO_VALIDATION;
+          for (int i = 0; i < nodesSize; i++) {
             nodes[i]->GetObjects<T>(targetObjectType, gatherObjects, recurse, depth + 1);
           }
+          //nodes.Unlock();
         }
       }
 
       template <class T>
       inline void GetObjects(e_ObjectType targetObjectType, std::deque < boost::intrusive_ptr<T> > &gatherObjects, const vector_Planes &bounding, bool recurse = true, int depth = 0) const {
+        //objects.Lock();
         int objectsSize = objects.size();
-        for (int i = 0; i < objectsSize; i++) { DO_VALIDATION;
-          if (objects[i]->GetObjectType() == targetObjectType) { DO_VALIDATION;
+        for (int i = 0; i < objectsSize; i++) {
+          if (objects[i]->GetObjectType() == targetObjectType) {
             if (objects[i]->GetAABB().Intersects(bounding)) gatherObjects.push_back(static_pointer_cast<T>(objects[i]));
           }
         }
+        //objects.Unlock();
 
-        if (recurse) { DO_VALIDATION;
+        if (recurse) {
+          //nodes.Lock();
           int nodesSize = nodes.size();
-          for (int i = 0; i < nodesSize; i++) { DO_VALIDATION;
+          for (int i = 0; i < nodesSize; i++) {
             if (nodes[i]->GetAABB().Intersects(bounding)) nodes[i]->GetObjects<T>(targetObjectType, gatherObjects, bounding, recurse, depth + 1);
           }
+          //nodes.Unlock();
         }
       }
 
@@ -97,6 +103,7 @@ namespace blunted {
     protected:
       mutable std::vector < boost::intrusive_ptr<Node> > nodes;
       mutable std::vector < boost::intrusive_ptr<Object> > objects;
+
   };
 
 }

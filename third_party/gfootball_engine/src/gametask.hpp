@@ -18,28 +18,47 @@
 #ifndef _HPP_FOOTBALL_GAMETASK
 #define _HPP_FOOTBALL_GAMETASK
 
+#include "types/iusertask.hpp"
+
 #include "onthepitch/match.hpp"
+#include "menu/menuscene.hpp"
 
 #include "menu/menutask.hpp"
 
 using namespace blunted;
 
-class GameTask {
+enum e_GameTaskMessage {
+  e_GameTaskMessage_StartMatch,
+  e_GameTaskMessage_StopMatch,
+  e_GameTaskMessage_StartMenuScene,
+  e_GameTaskMessage_StopMenuScene,
+  e_GameTaskMessage_None
+};
+
+class GameTask : public IUserTask {
 
   public:
     GameTask();
-    ~GameTask();
+    virtual ~GameTask();
 
-    void StartMatch(bool init_animation);
-    bool StopMatch();
+    void Exit();
 
-    void ProcessPhase();
-    void PrepareRender();
+    void Action(e_GameTaskMessage message);
 
-    Match *GetMatch() { DO_VALIDATION; return match.get(); }
+    virtual void GetPhase();
+    virtual void ProcessPhase();
+    virtual void PutPhase();
+
+    Match *GetMatch() { return match; }
+    MenuScene *GetMenuScene() { return menuScene; }
+
+    MessageQueue<e_GameTaskMessage> messageQueue;
+
+    virtual std::string GetName() const { return "game"; }
 
   protected:
-    std::unique_ptr<Match> match;
+    Match *match;
+    MenuScene *menuScene;
     boost::shared_ptr<Scene3D> scene3D;
 };
 

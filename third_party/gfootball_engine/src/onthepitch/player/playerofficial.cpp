@@ -24,54 +24,42 @@
 #include "../../main.hpp"
 #include "../../utils.hpp"
 
-PlayerOfficial::PlayerOfficial(e_OfficialType officialType, Match *match,
-                               PlayerData *playerData)
-    : PlayerBase(match, playerData), officialType(officialType) {
-  DO_VALIDATION;
+PlayerOfficial::PlayerOfficial(e_OfficialType officialType, Match *match, PlayerData *playerData) : PlayerBase(match, playerData), officialType(officialType) {
 }
 
-PlayerOfficial::~PlayerOfficial() { DO_VALIDATION; }
-
-HumanoidBase *PlayerOfficial::CastHumanoid() {
-  DO_VALIDATION;
-  return static_cast<HumanoidBase *>(humanoid.get());
+PlayerOfficial::~PlayerOfficial() {
 }
+
+HumanoidBase *PlayerOfficial::CastHumanoid() { return static_cast<HumanoidBase*>(humanoid); }
 
 RefereeController *PlayerOfficial::CastController() {
-  DO_VALIDATION;
-  return static_cast<RefereeController *>(controller.get());
+  return static_cast<RefereeController*>(controller);
 }
 
-void PlayerOfficial::Activate(boost::intrusive_ptr<Node> humanoidSourceNode,
-                              boost::intrusive_ptr<Node> fullbodySourceNode,
-                              std::map<Vector3, Vector3> &colorCoords,
-                              boost::intrusive_ptr<Resource<Surface> > kit,
-                              boost::shared_ptr<AnimCollection> animCollection,
-                              bool lazyPlayer) {
-  DO_VALIDATION;
+void PlayerOfficial::Activate(boost::intrusive_ptr<Node> humanoidSourceNode, boost::intrusive_ptr<Node> fullbodySourceNode, std::map<Vector3, Vector3> &colorCoords, boost::intrusive_ptr < Resource<Surface> > kit, boost::shared_ptr<AnimCollection> animCollection, bool lazyPlayer) {
   isActive = true;
-  humanoid.reset(new HumanoidBase(
-      this, match, humanoidSourceNode, fullbodySourceNode, colorCoords,
-      animCollection, match->GetDynamicNode(), kit));
+  humanoid = new HumanoidBase(this, match, humanoidSourceNode, fullbodySourceNode, colorCoords, animCollection, match->GetDynamicNode(), kit, 0);
 
   CastHumanoid()->ResetPosition(Vector3(0), Vector3(0));
 
-  controller.reset(new RefereeController(match));
-  controller->SetPlayer(this);
+  controller = new RefereeController(match);
+  CastController()->SetPlayer(this);
 }
 
 void PlayerOfficial::Deactivate() {
-  DO_VALIDATION;
   PlayerBase::Deactivate();
 }
 
 void PlayerOfficial::Process() {
-  DO_VALIDATION;
   CastController()->Process();
   CastHumanoid()->Process();
 }
 
-void PlayerOfficial::FetchPutBuffers() {
-  DO_VALIDATION;
-  PlayerBase::FetchPutBuffers();
+void PlayerOfficial::PreparePutBuffers(unsigned long snapshotTime_ms) {
+  PlayerBase::PreparePutBuffers(snapshotTime_ms);
 }
+
+void PlayerOfficial::FetchPutBuffers(unsigned long putTime_ms) {
+  PlayerBase::FetchPutBuffers(putTime_ms);
+}
+

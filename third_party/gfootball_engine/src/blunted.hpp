@@ -22,10 +22,16 @@
 
 namespace blunted {
 
+  class Scheduler;
   class Properties;
 
   /// load managers, systems, scheduler and scene
   void Initialize(Properties &config);
+
+  /// execute a single scheduler loop
+  void DoStep();
+
+  Scheduler *GetScheduler();
 
   /// unload all
   void Exit();

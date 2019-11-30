@@ -15,6 +15,8 @@
 
 """Base controller class."""
 
+import logging
+
 from gfootball.env import football_action_set
 from gfootball.env import player_base
 
@@ -22,10 +24,9 @@ from gfootball.env import player_base
 class Controller(player_base.PlayerBase):
   """Base controller class."""
 
-  def __init__(self, player_config, env_config):
+  def __init__(self, player_config):
     player_base.PlayerBase.__init__(self, player_config)
     self._active_actions = {}
-    self._env_config = env_config
     self._last_action = football_action_set.action_idle
     self._last_direction = football_action_set.action_idle
     self._current_direction = football_action_set.action_idle
@@ -38,8 +39,6 @@ class Controller(player_base.PlayerBase):
       active_actions: Set of all active actions
     """
     assert isinstance(action, football_action_set.CoreAction)
-    if not action.is_in_actionset(self._env_config):
-      return
     state = active_actions.get(action, 0)
     if (self._last_action == football_action_set.action_idle and
         self._active_actions.get(action, 0) != state):
@@ -50,20 +49,17 @@ class Controller(player_base.PlayerBase):
         self._last_action = football_action_set.disable_action(action)
         assert self._last_action
 
-  def _check_direction(self, action, state):
+  def _check_direction(self, number, state):
     """Compare (and update) controller's direction with the current direction.
 
     Args:
       action: Action to check
       state: Current state of the action being checked
     """
-    assert isinstance(action, football_action_set.CoreAction)
-    if not action.is_in_actionset(self._env_config):
-      return
     if self._current_direction != football_action_set.action_idle:
       return
     if state:
-      self._current_direction = action
+      self._current_direction = number
 
   def get_env_action(self, left, right, top, bottom, active_actions):
     """For a given controller's state generate next environment action.

@@ -28,6 +28,8 @@ namespace blunted {
 
   struct Gui2PageData {
     int pageID = 0;
+    boost::shared_ptr<Properties> properties;
+    void *data;
   };
 
   class Gui2Page : public Gui2Frame {
@@ -35,6 +37,12 @@ namespace blunted {
     public:
       Gui2Page(Gui2WindowManager *windowManager, const Gui2PageData &pageData);
       virtual ~Gui2Page();
+
+      void GoBack();
+      virtual void ProcessWindowingEvent(WindowingEvent *event);
+
+      // moved to View class: boost::signals2::signal<void()> sig_OnClose;
+
     protected:
       Gui2PageData pageData;
 
@@ -48,8 +56,9 @@ namespace blunted {
 
       virtual void SetWindowManager(Gui2WindowManager *wm);
 
-      virtual Gui2Page *CreatePage(int pageID, void *data = 0);
+      virtual Gui2Page *CreatePage(int pageID, const Properties &properties, void *data = 0);
       virtual Gui2Page *CreatePage(const Gui2PageData &pageData) = 0;
+      virtual Gui2Page *GetMostRecentlyCreatedPage() = 0;
 
     protected:
       Gui2WindowManager *windowManager;
@@ -58,31 +67,31 @@ namespace blunted {
   class Gui2PagePath {
 
     public:
-      Gui2PagePath() { DO_VALIDATION;};
-      virtual ~Gui2PagePath() { DO_VALIDATION; Clear(); };
+      Gui2PagePath() {};
+      virtual ~Gui2PagePath() { Clear(); };
 
-      bool Empty() { DO_VALIDATION; return path.empty(); }
+      bool Empty() { return path.empty(); }
       void Push(const Gui2PageData &pageData,
-                Gui2Page *mostRecentlyCreatedPage) { DO_VALIDATION;
+                Gui2Page *mostRecentlyCreatedPage) {
         CHECK(!this->mostRecentlyCreatedPage);
         path.push_back(pageData);
         this->mostRecentlyCreatedPage = mostRecentlyCreatedPage;
       }
-      void Pop() { DO_VALIDATION;
+      void Pop() {
         path.pop_back();
       }
-      Gui2PageData GetLast() { DO_VALIDATION;
+      Gui2PageData GetLast() {
         return path.back();
       }
-      void Clear() { DO_VALIDATION;
+      void Clear() {
         DeleteCurrent();
         path.clear();
       }
-      Gui2Page* GetMostRecentlyCreatedPage() { DO_VALIDATION;
+      Gui2Page* GetMostRecentlyCreatedPage() {
         return mostRecentlyCreatedPage;
       }
-      void DeleteCurrent() { DO_VALIDATION;
-        if (mostRecentlyCreatedPage) { DO_VALIDATION;
+      void DeleteCurrent() {
+        if (mostRecentlyCreatedPage) {
           mostRecentlyCreatedPage->Exit();
           delete mostRecentlyCreatedPage;
           mostRecentlyCreatedPage = nullptr;

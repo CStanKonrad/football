@@ -22,6 +22,7 @@
 
 #include "../../types/messagequeue.hpp"
 #include "../../systems/isystem.hpp"
+#include "../../systems/isystemscene.hpp"
 #include "../../systems/graphics/rendering/opengl_renderer3d.hpp"
 
 #include "../../scene/iscene.hpp"
@@ -36,31 +37,27 @@
 namespace blunted {
 
   class Renderer3D;
-  class GraphicsScene;
 
-  class GraphicsSystem {
+  class GraphicsSystem : public ISystem {
 
     public:
       GraphicsSystem();
       virtual ~GraphicsSystem();
 
-      virtual void Initialize(bool render);
+      virtual void Initialize(const Properties &config);
       virtual void Exit();
-      void SetContext();
-      void DisableContext();
       const screenshoot& GetScreen();
 
       e_SystemType GetSystemType() const;
 
-      GraphicsScene *Create2DScene(boost::shared_ptr<IScene> scene);
-      GraphicsScene *Create3DScene(boost::shared_ptr<IScene> scene);
+      virtual ISystemScene *CreateSystemScene(boost::shared_ptr<IScene> scene);
 
-      GraphicsTask *GetTask();
+      virtual ISystemTask *GetTask();
       virtual Renderer3D *GetRenderer3D();
 
       MessageQueue<Overlay2DQueueEntry> &GetOverlay2DQueue();
 
-      Vector3 GetContextSize() { DO_VALIDATION; return Vector3(width, height, bpp); }
+      Vector3 GetContextSize() { return Vector3(width, height, bpp); }
 
       virtual std::string GetName() const { return "graphics"; }
 

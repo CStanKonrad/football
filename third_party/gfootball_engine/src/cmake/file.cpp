@@ -18,8 +18,7 @@
 
 namespace fs = boost::filesystem;
 
-std::string GetFile(const std::string &fileName) {
-  DO_VALIDATION;
+std::string GetFile(const std::string& fileName) {
   std::ifstream file;
   file.open(fileName.c_str(), std::ios::in);
   std::string str((std::istreambuf_iterator<char>(file)),
@@ -30,18 +29,14 @@ std::string GetFile(const std::string &fileName) {
 
 void GetFilesRec(boost::filesystem::path path, const std::string &extension,
                  std::vector<std::string> &files) {
-  DO_VALIDATION;
   if (!fs::exists(path) || !fs::is_directory(path)) {
-    DO_VALIDATION;
     Log(e_Error, "DirectoryParser", "Parse",
         "Could not open directory " + path.string() + " for reading");
   }
   fs::directory_iterator dirIter(path);
   fs::directory_iterator endIter;
   while (dirIter != endIter) {
-    DO_VALIDATION;
     if (is_directory(dirIter->status())) {
-      DO_VALIDATION;
       boost::filesystem::path thePath(path);
       thePath /= dirIter->path().filename();
       GetFilesRec(thePath, extension, files);
@@ -50,7 +45,6 @@ void GetFilesRec(boost::filesystem::path path, const std::string &extension,
       thePath /= dirIter->path().filename();
 
       if (thePath.extension() == "." + extension) {
-        DO_VALIDATION;
         files.push_back(path.string() + "/" + thePath.filename().string());
       }
     }
@@ -61,6 +55,5 @@ void GetFilesRec(boost::filesystem::path path, const std::string &extension,
 
 void GetFiles(std::string path, const std::string &extension,
               std::vector<std::string> &files) {
-  DO_VALIDATION;
   GetFilesRec(GetGameConfig().updatePath(path), extension, files);
 }

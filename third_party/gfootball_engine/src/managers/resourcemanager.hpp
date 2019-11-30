@@ -25,6 +25,8 @@
 
 #include "../types/loader.hpp"
 
+#include "../managers/environmentmanager.hpp"
+
 namespace blunted {
 
   template <typename T>
@@ -34,26 +36,26 @@ namespace blunted {
   class ResourceManager {
 
     public:
-      ResourceManager() { DO_VALIDATION;};
+      ResourceManager() {};
 
-      ~ResourceManager() { DO_VALIDATION;
+      ~ResourceManager() {
 
         resources.clear();
 
         loaders.clear();
       };
 
-      void RegisterLoader(const std::string &extension, Loader<T> *loader) { DO_VALIDATION;
+      void RegisterLoader(const std::string &extension, Loader<T> *loader) {
         //printf("registering loader for extension %s\n", extension.c_str());
         loaders.insert(std::make_pair(extension, loader));
       }
 
-      boost::intrusive_ptr < Resource<T> > Fetch(const std::string &filename, bool load = true, bool useExisting = true) { DO_VALIDATION;
+      boost::intrusive_ptr < Resource<T> > Fetch(const std::string &filename, bool load = true, bool useExisting = true) {
         bool foo = false;
         return Fetch(filename, load, foo, useExisting);
       }
 
-      boost::intrusive_ptr < Resource<T> > Fetch(const std::string &filename, bool load, bool &alreadyThere, bool useExisting) { DO_VALIDATION;
+      boost::intrusive_ptr < Resource<T> > Fetch(const std::string &filename, bool load, bool &alreadyThere, bool useExisting) {
         std::string adaptedFilename = get_file_name(filename);
 
         // resource already loaded?
@@ -61,11 +63,11 @@ namespace blunted {
         bool success = false;
         boost::intrusive_ptr < Resource<T> > foundResource;
 
-        if (useExisting) { DO_VALIDATION;
+        if (useExisting) {
           foundResource = Find(adaptedFilename, success);
         }
 
-        if (success) { DO_VALIDATION;
+        if (success) {
           // resource is already there! w00t, that'll win us some cycles
           // (or user wants a new copy)
 
@@ -83,11 +85,11 @@ namespace blunted {
 
           // try to load
 
-          if (load) { DO_VALIDATION;
+          if (load) {
             std::string extension = get_file_extension(filename);
             std::transform(extension.begin(), extension.end(), extension.begin(), ::tolower);
             typename std::map < std::string, Loader<T>* >::iterator iter = loaders.find(extension);
-            if (iter != loaders.end()) { DO_VALIDATION;
+            if (iter != loaders.end()) {
               (*iter).second->Load(filename, resource);
             } else {
               Log(e_FatalError, "ResourceManager<>", "Load", "There is no loader for " + filename);
@@ -98,9 +100,9 @@ namespace blunted {
         }
       }
 
-      boost::intrusive_ptr < Resource<T> > FetchCopy(const std::string &filename, const std::string &newName, bool &alreadyThere) { DO_VALIDATION;
+      boost::intrusive_ptr < Resource<T> > FetchCopy(const std::string &filename, const std::string &newName, bool &alreadyThere) {
         boost::intrusive_ptr < Resource<T> > resourceCopy;
-        if (resources.find(newName) != resources.end()) { DO_VALIDATION;
+        if (resources.find(newName) != resources.end()) {
           //Log(e_Warning, "ResourceManager", "FetchCopy", "Duplicate key '" + newName + "' - returning existing resource instead of copy (maybe just use Fetch() instead?)");
           resourceCopy = Fetch(newName, false, true);
         } else {
@@ -114,7 +116,7 @@ namespace blunted {
         return resourceCopy;
       }
 
-      void RemoveUnused() { DO_VALIDATION;
+      void RemoveUnused() {
         // periodically execute this cleanup code somewhere
         // currently invoked from scheduler, could be a user task?
         // as if it were a service..
@@ -125,8 +127,8 @@ namespace blunted {
 
 
         typename std::map < std::string, boost::intrusive_ptr< Resource<T> > >::iterator resIter = resources.begin();
-        while (resIter != resources.end()) { DO_VALIDATION;
-          if (resIter->second->GetRefCount() == 1) { DO_VALIDATION;
+        while (resIter != resources.end()) {
+          if (resIter->second->GetRefCount() == 1) {
             //printf("removing unused %s resource '%s'\n", typeDescription.c_str(), resIter->second->GetIdentString().c_str());
             resources.erase(resIter++);
           } else {
@@ -137,10 +139,10 @@ namespace blunted {
 
       }
 
-      void Remove(const std::string &identString) { DO_VALIDATION;
+      void Remove(const std::string &identString) {
 
         auto iter = resources.find(identString);
-        if (iter != resources.end()) { DO_VALIDATION;
+        if (iter != resources.end()) {
           resources.erase(iter);
         }
 
@@ -148,10 +150,10 @@ namespace blunted {
 
     protected:
 
-      boost::intrusive_ptr < Resource<T> > Find(const std::string &identString, bool &success) { DO_VALIDATION;
+      boost::intrusive_ptr < Resource<T> > Find(const std::string &identString, bool &success) {
 
         typename std::map < std::string, boost::intrusive_ptr< Resource<T> > >::iterator resIter = resources.find(identString);
-        if (resIter != resources.end()) { DO_VALIDATION;
+        if (resIter != resources.end()) {
           success = true;
           boost::intrusive_ptr < Resource<T> > resource = (*resIter).second;
 
@@ -163,14 +165,14 @@ namespace blunted {
         }
       }
 
-      void Register(boost::intrusive_ptr < Resource<T> > resource) { DO_VALIDATION;
+      void Register(boost::intrusive_ptr < Resource<T> > resource) {
 
 
 
         //printf("registering %s\n", resource->GetIdentString().c_str());
-        if (resources.find(resource->GetIdentString()) != resources.end()) { DO_VALIDATION;
+        if (resources.find(resource->GetIdentString()) != resources.end()) {
            Remove(resource->GetIdentString());
-          if (resources.find(resource->GetIdentString()) != resources.end()) { DO_VALIDATION;
+          if (resources.find(resource->GetIdentString()) != resources.end()) {
             Log(e_FatalError, "ResourceManager", "Register", "Duplicate key '" + resource->GetIdentString() + "'");
           }
         }

@@ -15,7 +15,7 @@
 
 """Player with actions coming from gamepad."""
 
-from absl import logging
+import logging
 import pygame
 
 from gfootball.env import controller_base
@@ -40,14 +40,13 @@ class Player(controller_base.Controller):
   """Player with actions coming from gamepad."""
 
   def __init__(self, player_config, env_config):
-    controller_base.Controller.__init__(self, player_config, env_config)
-    self._can_play_right = True
+    controller_base.Controller.__init__(self, player_config)
     pygame.init()
     self._index = player_config['player_gamepad']
     event_queue.add_controller('gamepad', self._index)
     pygame.joystick.init()
     if pygame.joystick.get_count() < self._index:
-      logging.error("You need %d physical controller(s) connected" % self._index)
+      logging.info("You need %d physical controller(s) connected" % self._index)
       exit(1)
     self._joystick = pygame.joystick.Joystick(self._index)
     self._joystick.init()

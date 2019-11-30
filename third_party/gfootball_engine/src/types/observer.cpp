@@ -19,15 +19,15 @@
 
 namespace blunted {
 
-Observer::Observer() {
-  DO_VALIDATION;
-  subjectPtr = 0;
-}
+  Observer::Observer() {
+    subjectPtr = 0;
+  }
 
-Observer::~Observer() { DO_VALIDATION; }
+  Observer::~Observer() {
+  }
 
-void Observer::SetSubjectPtr(void *subjectPtr) {
-  DO_VALIDATION;
-  this->subjectPtr = subjectPtr;
-}
+  void Observer::SetSubjectPtr(void *subjectPtr) {
+    this->subjectPtr = subjectPtr;
+  }
+
 }

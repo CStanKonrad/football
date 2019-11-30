@@ -29,7 +29,7 @@ namespace blunted {
   class ISystemObject {
 
     public:
-      virtual ~ISystemObject() { DO_VALIDATION;};
+      virtual ~ISystemObject() {};
 
       virtual boost::intrusive_ptr<Interpreter> GetInterpreter(e_ObjectType objectType) = 0;
 

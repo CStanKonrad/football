@@ -21,7 +21,8 @@
 #include "../defines.hpp"
 
 #include "../types/subject.hpp"
-#include "../scene/object.hpp"
+
+#include "../systems/isystemscene.hpp"
 
 namespace blunted {
 
@@ -42,6 +43,9 @@ namespace blunted {
 
       virtual void CreateSystemObjects(boost::intrusive_ptr<Object> object) = 0;
 
+      virtual const std::string GetName() const = 0;
+      virtual e_SceneType GetSceneType() const = 0;
+
       virtual void PokeObjects(e_ObjectType targetObjectType, e_SystemType targetSystemType) = 0;
       virtual bool SupportedObjectType(e_ObjectType objectType) const = 0;
 
@@ -55,7 +59,7 @@ namespace blunted {
       virtual void OnLoad() = 0;
       virtual void OnUnload() = 0;
 
-      virtual ISystemObject *CreateSystemObject(Object* object) = 0;
+      virtual ISystemObject *CreateSystemObject(boost::intrusive_ptr<Object> object) = 0;
 
     protected:
 

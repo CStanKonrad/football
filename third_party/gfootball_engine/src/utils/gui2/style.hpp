@@ -18,7 +18,6 @@
 #ifndef _HPP_GUI2_STYLE
 #define _HPP_GUI2_STYLE
 
-#include <map>
 #include "wrap_SDL_ttf.h"
 #include "../../base/math/vector3.hpp"
 

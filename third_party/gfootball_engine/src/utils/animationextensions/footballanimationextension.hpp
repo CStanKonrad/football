@@ -19,8 +19,6 @@
 #define _HPP_FOOTBALLANIMATIONEXTENSION
 
 #include "animationextension.hpp"
-#include <map>
-#include <vector>
 
 namespace blunted {
 

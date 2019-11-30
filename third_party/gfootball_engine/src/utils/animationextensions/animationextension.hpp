@@ -18,7 +18,6 @@
 #ifndef _HPP_ANIMATIONEXTENSION
 #define _HPP_ANIMATIONEXTENSION
 
-#include <vector>
 #include "../../base/math/vector3.hpp"
 
 namespace blunted {
@@ -28,8 +27,8 @@ namespace blunted {
   class AnimationExtension {
 
     public:
-      AnimationExtension(Animation *parent) : parent(parent) { DO_VALIDATION;};
-      virtual ~AnimationExtension() { DO_VALIDATION; parent = 0; };
+      AnimationExtension(Animation *parent) : parent(parent) {};
+      virtual ~AnimationExtension() { parent = 0; };
 
       virtual void Shift(int fromFrame, int offset) = 0;
       virtual void Rotate2D(radian angle) = 0;

@@ -18,6 +18,8 @@
 #ifndef _hpp_bluntmath_matrix3
 #define _hpp_bluntmath_matrix3
 
+#include "../../defines.hpp"
+
 #include "bluntmath.hpp"
 
 namespace blunted {

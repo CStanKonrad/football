@@ -23,25 +23,16 @@ namespace blunted {
 
   const int __triangleMeshElementCount = 5;
 
-  AABB GetTriangleMeshAABB(float *vertices, int verticesDataSize,
-                           const std::vector<unsigned int> &indices) {
-    DO_VALIDATION;
+  AABB GetTriangleMeshAABB(float *vertices, int verticesDataSize, const std::vector<unsigned int> &indices) {
     AABB aabb;
 
     aabb.Reset();
 
     if (indices.size() == 0) {
-      DO_VALIDATION;
 
-      for (unsigned int t = 0;
-           t < verticesDataSize / (unsigned int)GetTriangleMeshElementCount() /
-                   3 / 3;
-           t++) {
-        DO_VALIDATION;
+      for (unsigned int t = 0; t < verticesDataSize / (unsigned int)GetTriangleMeshElementCount() / 3 / 3; t++) {
         for (unsigned int v = 0; v < 3; v++) {
-          DO_VALIDATION;
           for (unsigned int i = 0; i < 3; i++) {
-            DO_VALIDATION;
             if (vertices[t * 9 + v * 3 + i] < aabb.minxyz.coords[i]) aabb.minxyz.coords[i] = vertices[t * 9 + v * 3 + i];
             if (vertices[t * 9 + v * 3 + i] > aabb.maxxyz.coords[i]) aabb.maxxyz.coords[i] = vertices[t * 9 + v * 3 + i];
           }
@@ -49,18 +40,17 @@ namespace blunted {
       }
 
     } else {
+
       for (unsigned int t = 0; t < indices.size() / 3; t++) {
-        DO_VALIDATION;
         for (unsigned int v = 0; v < 3; v++) {
-          DO_VALIDATION;
           for (unsigned int i = 0; i < 3; i++) {
-            DO_VALIDATION;
             assert(verticesDataSize > indices[t * 3 + v] + i);
             if (vertices[indices[t * 3 + v] + i] < aabb.minxyz.coords[i]) aabb.minxyz.coords[i] = vertices[indices[t * 3 + v] + i];
             if (vertices[indices[t * 3 + v] + i] > aabb.maxxyz.coords[i]) aabb.maxxyz.coords[i] = vertices[indices[t * 3 + v] + i];
           }
         }
       }
+
     }
 
     aabb.MakeDirty();
@@ -68,7 +58,7 @@ namespace blunted {
   }
 
   int GetTriangleMeshElementCount() {
-    DO_VALIDATION;
     return __triangleMeshElementCount;
   }
+
 }

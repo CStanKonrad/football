@@ -21,75 +21,62 @@
 
 namespace blunted {
 
-Texture::Texture() : textureID(-1) {
-  DO_VALIDATION;
-  this->renderer3D = 0;
-  textureID = -1;
-  width = 0;
-  height = 0;
-}
-
-Texture::~Texture() {
-  DO_VALIDATION;
-  DeleteTexture();
-}
-
-void Texture::SetRenderer3D(Renderer3D *renderer3D) {
-  DO_VALIDATION;
-  this->renderer3D = renderer3D;
-}
-
-void Texture::DeleteTexture() {
-  DO_VALIDATION;
-  if (textureID != -1) {
-    DO_VALIDATION;
-    assert(renderer3D);
-    renderer3D->DeleteTexture(textureID);
+  Texture::Texture() : textureID(-1) {
+    //printf("CREATING TEXTUREID\n");
+    this->renderer3D = 0;
     textureID = -1;
+    width = 0;
+    height = 0;
   }
-}
 
-int Texture::CreateTexture(e_InternalPixelFormat internalPixelFormat,
-                           e_PixelFormat pixelFormat, int width, int height,
-                           bool alpha, bool repeat, bool mipmaps, bool filter,
-                           bool compareDepth) {
-  DO_VALIDATION;
-  assert(renderer3D);
+  Texture::~Texture() {
+    //printf("ERASING TEXTURE ID #%i\n", textureID);
 
-  textureID = renderer3D->CreateTexture(internalPixelFormat, pixelFormat, width,
-                                        height, alpha, repeat, mipmaps, filter,
-                                        false, compareDepth);
+    DeleteTexture();
+    //printf(" [ok]\n");
+  }
 
-  this->width = width;
-  this->height = height;
+  void Texture::SetRenderer3D(Renderer3D *renderer3D) {
+    this->renderer3D = renderer3D;
+  }
 
-  return textureID;
-}
+  void Texture::DeleteTexture() {
+    if (textureID != -1) {
+      assert(renderer3D);
+      renderer3D->DeleteTexture(textureID);
+      textureID = -1;
+    }
+  }
 
-void Texture::ResizeTexture(SDL_Surface *image,
-                            e_InternalPixelFormat internalPixelFormat,
-                            e_PixelFormat pixelFormat, bool alpha,
-                            bool mipmaps) {
-  DO_VALIDATION;
-  assert(renderer3D);
-  assert(textureID != -1);
+  int Texture::CreateTexture(e_InternalPixelFormat internalPixelFormat, e_PixelFormat pixelFormat, int width, int height, bool alpha, bool repeat, bool mipmaps, bool filter, bool compareDepth) {
+    assert(renderer3D);
 
-  bool _alpha = SDL_ISPIXELFORMAT_ALPHA(image->format->format);
-  renderer3D->ResizeTexture(textureID, image, internalPixelFormat, pixelFormat,
-                            _alpha, mipmaps);
-}
+    textureID = renderer3D->CreateTexture(internalPixelFormat, pixelFormat, width, height, alpha, repeat, mipmaps, filter, false, compareDepth);
 
-void Texture::UpdateTexture(SDL_Surface *image, bool alpha, bool mipmaps) {
-  DO_VALIDATION;
-  assert(renderer3D);
-  assert(textureID != -1);
+    this->width = width;
+    this->height = height;
 
-  bool _alpha = SDL_ISPIXELFORMAT_ALPHA(image->format->format);
-  renderer3D->UpdateTexture(textureID, image, _alpha, mipmaps);
-}
+    return textureID;
+  }
 
-int Texture::GetID() {
-  DO_VALIDATION;
-  return textureID;
-}
+  void Texture::ResizeTexture(SDL_Surface *image, e_InternalPixelFormat internalPixelFormat, e_PixelFormat pixelFormat, bool alpha, bool mipmaps) {
+    assert(renderer3D);
+    assert(textureID != -1);
+
+    bool _alpha = SDL_ISPIXELFORMAT_ALPHA(image->format->format);
+    renderer3D->ResizeTexture(textureID, image, internalPixelFormat, pixelFormat, _alpha, mipmaps);
+  }
+
+  void Texture::UpdateTexture(SDL_Surface *image, bool alpha, bool mipmaps) {
+    assert(renderer3D);
+    assert(textureID != -1);
+
+    bool _alpha = SDL_ISPIXELFORMAT_ALPHA(image->format->format);
+    renderer3D->UpdateTexture(textureID, image, _alpha, mipmaps);
+  }
+
+  int Texture::GetID() {
+    return textureID;
+  }
+
 }

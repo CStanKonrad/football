@@ -13,64 +13,42 @@
 
 #include "ai_keyboard.hpp"
 
+
 AIControlledKeyboard::AIControlledKeyboard() {
-  DO_VALIDATION;
-  Reset();
+  deviceType = e_HIDeviceType_Keyboard;
+  identifier = "AIkeyboard";
+}
+
+void AIControlledKeyboard::Process() {
+
 }
 
 bool AIControlledKeyboard::GetButton(e_ButtonFunction buttonFunction) {
-  return buttons_pressed_[buttonFunction];
+  return buttons_pressed_.find(buttonFunction) != buttons_pressed_.end();
 }
 
-void AIControlledKeyboard::ResetNotSticky() {
-  DO_VALIDATION;
-  buttons_pressed_[e_ButtonFunction_LongPass] = false;
-  buttons_pressed_[e_ButtonFunction_HighPass] = false;
-  buttons_pressed_[e_ButtonFunction_ShortPass] = false;
-  buttons_pressed_[e_ButtonFunction_Shot] = false;
-  buttons_pressed_[e_ButtonFunction_Sliding] = false;
-  buttons_pressed_[e_ButtonFunction_Switch] = false;
+void AIControlledKeyboard::SetButton(e_ButtonFunction buttonFunction, bool state) {
+  if (state) {
+    buttons_pressed_.insert(buttonFunction);
+  } else {
+    buttons_pressed_.erase(buttonFunction);
+  }
 }
 
-void AIControlledKeyboard::SetButton(e_ButtonFunction buttonFunction,
-                                     bool state) {
-  DO_VALIDATION;
-  buttons_pressed_[buttonFunction] = state;
-}
-
-bool AIControlledKeyboard::GetPreviousButtonState(
-    e_ButtonFunction buttonFunction) {
-  DO_VALIDATION;
+bool AIControlledKeyboard::GetPreviousButtonState(e_ButtonFunction buttonFunction) {
   return false;
 }
 
 Vector3 AIControlledKeyboard::GetDirection() {
-  DO_VALIDATION;
-  return direction_ * mirror;
+  return direction_;
 }
-
-Vector3 AIControlledKeyboard::GetOriginalDirection() { return direction_; }
 
 void AIControlledKeyboard::SetDirection(const Vector3& new_direction) {
   direction_ = new_direction;
 }
 
 void AIControlledKeyboard::Reset() {
-  DO_VALIDATION;
   direction_ = Vector3(0, 0, 0);
-  memset(buttons_pressed_, 0, sizeof(buttons_pressed_));
+  buttons_pressed_.clear();
 }
 
-void AIControlledKeyboard::ProcessState(EnvState* state) {
-  DO_VALIDATION;
-  state->setValidate(false);
-  state->process(mirror);
-  state->process(direction_);
-  state->setValidate(true);
-  state->process((void*)buttons_pressed_, sizeof(buttons_pressed_));
-}
-
-void AIControlledKeyboard::Mirror(float mirror) {
-  DO_VALIDATION;
-  this->mirror = mirror;
-}

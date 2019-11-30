@@ -18,6 +18,8 @@
 #ifndef _hpp_bluntmath_matrix4
 #define _hpp_bluntmath_matrix4
 
+#include "../../defines.hpp"
+
 #include "bluntmath.hpp"
 #include "vector3.hpp"
 #include "quaternion.hpp"

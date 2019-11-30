@@ -28,19 +28,18 @@ class Officials {
 
   public:
     Officials(Match *match, boost::intrusive_ptr<Node> fullbodySourceNode, std::map<Vector3, Vector3> &colorCoords, boost::intrusive_ptr < Resource<Surface> > kit, boost::shared_ptr<AnimCollection> animCollection);
-    ~Officials();
-    void Mirror();
+    virtual ~Officials();
 
     void GetPlayers(std::vector<PlayerBase*> &players);
-    PlayerOfficial *GetReferee() { DO_VALIDATION; return referee; }
+    PlayerOfficial *GetReferee() { return referee; }
 
-    void Process();
-    void FetchPutBuffers();
-    void Put(bool mirror);
+    virtual void Process();
+    virtual void PreparePutBuffers(unsigned long snapshotTime_ms);
+    virtual void FetchPutBuffers(unsigned long putTime_ms);
+    virtual void Put();
 
-    boost::intrusive_ptr<Geometry> GetYellowCardGeom() { DO_VALIDATION; return yellowCard; }
-    boost::intrusive_ptr<Geometry> GetRedCardGeom() { DO_VALIDATION; return redCard; }
-    void ProcessState(EnvState* state);
+    boost::intrusive_ptr<Geometry> GetYellowCardGeom() { return yellowCard; }
+    boost::intrusive_ptr<Geometry> GetRedCardGeom() { return redCard; }
 
   protected:
     Match *match;

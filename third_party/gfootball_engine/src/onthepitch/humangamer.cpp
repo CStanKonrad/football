@@ -23,48 +23,36 @@
 
 #include "../main.hpp"
 
-HumanGamer::HumanGamer(Team *team, IHIDevice *hid, e_PlayerColor color)
-    : team(team), hid(hid), controller(team->GetMatch(), hid), playerColor(color) {
-  DO_VALIDATION;
+HumanGamer::HumanGamer(Team *team, IHIDevice *hid, e_PlayerColor color) : team(team), hid(hid), playerColor(color) {
+  controller = new HumanController(team->GetMatch(), hid);
+
   std::vector<Player*> activePlayers;
   team->GetActivePlayers(activePlayers);
   selectedPlayer = 0;
-  SetSelectedPlayer(0);
+  SetSelectedPlayerID(-1);
 }
 
 HumanGamer::~HumanGamer() {
-  DO_VALIDATION;
+  delete controller;
 
   if (selectedPlayer) {
-    DO_VALIDATION;
     selectedPlayer->SetExternalController(0);
   }
 }
 
-void HumanGamer::SetSelectedPlayer(Player *player) {
-  DO_VALIDATION;
+int HumanGamer::GetSelectedPlayerID() const {
+  if (selectedPlayer) return selectedPlayer->GetID(); else return -1;
+}
+
+void HumanGamer::SetSelectedPlayerID(int id) {
   if (selectedPlayer) {
-    DO_VALIDATION;
-    if (selectedPlayer == player) return;
+    if (selectedPlayer->GetID() == id) return;
     selectedPlayer->SetExternalController(0);
   }
-  if (player) {
-    DO_VALIDATION;
-    selectedPlayer = player;
-    selectedPlayer->SetExternalController(&controller);
+  if (id != -1) {
+    selectedPlayer = team->GetPlayer(id);
+    selectedPlayer->SetExternalController(controller);
   } else {
     selectedPlayer = 0;
   }
-}
-
-void HumanGamer::ProcessState(EnvState *state) {
-  DO_VALIDATION;
-  state->process(selectedPlayer);
-  state->process(team);
-  state->setValidate(false);
-  state->process(hid);
-  state->process((void*) &playerColor, sizeof(playerColor));
-  state->setValidate(true);
-  controller.PreProcess(team->GetMatch(), hid);
-  controller.ProcessState(state);
 }

@@ -18,16 +18,7 @@
 #ifndef _HPP_LOG
 #define _HPP_LOG
 
-#include <string>
-
-void DoValidation(int line, const char* file);
-// Uncomment line below to enable validation.
-// #define FULL_VALIDATION 1
-#ifdef FULL_VALIDATION
-  #define DO_VALIDATION DoValidation(__LINE__, __FILE__);
-#else
-  #define DO_VALIDATION ;
-#endif
+#include "../defines.hpp"
 
 namespace blunted {
 
@@ -37,6 +28,7 @@ namespace blunted {
     e_FatalError
   };
 
+  typedef boost::signals2::signal < void(e_LogType, std::string, std::string, std::string) > signal_LogCallback;
   void Log(e_LogType logType, std::string className, std::string methodName, std::string message);
 
 }

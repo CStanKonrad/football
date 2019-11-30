@@ -34,13 +34,14 @@ inline float ClampVelocity(float velocity);
 inline float EnumToFloatVelocity(e_Velocity velocity);
 inline e_Velocity FloatToEnumVelocity(float velocity);
 
-radian FixAngle(radian angle) { DO_VALIDATION;
+radian FixAngle(radian angle) {
   // convert engine angle into football angle (different base orientation: 'down' on y instead of 'right' on x)
-  angle += 0.5f * pi;
-  return ModulateIntoRange(-pi, pi, angle);
+  radian newAngle = angle;
+  newAngle += 0.5f * pi;
+  return ModulateIntoRange(-pi, pi, newAngle);
 }
 
-float RangeVelocity(float velocity) { DO_VALIDATION;
+float RangeVelocity(float velocity) {
   float retVelocity = idleVelocity;
   if (velocity >= idleDribbleSwitch && velocity < dribbleWalkSwitch) retVelocity = dribbleVelocity;
   else if (velocity >= dribbleWalkSwitch && velocity < walkSprintSwitch) retVelocity = walkVelocity;
@@ -48,14 +49,14 @@ float RangeVelocity(float velocity) { DO_VALIDATION;
   return retVelocity;
 }
 
-float ClampVelocity(float velocity) { DO_VALIDATION;
+float ClampVelocity(float velocity) {
   if (velocity < 0) return 0;
   if (velocity > sprintVelocity) return sprintVelocity;
   return velocity;
 }
 
-float EnumToFloatVelocity(e_Velocity velocity) { DO_VALIDATION;
-  switch (velocity) { DO_VALIDATION;
+float EnumToFloatVelocity(e_Velocity velocity) {
+  switch (velocity) {
     case e_Velocity_Idle:
       return idleVelocity;
       break;
@@ -72,7 +73,7 @@ float EnumToFloatVelocity(e_Velocity velocity) { DO_VALIDATION;
   return 0;
 }
 
-e_Velocity FloatToEnumVelocity(float velocity) { DO_VALIDATION;
+e_Velocity FloatToEnumVelocity(float velocity) {
   float rangedVelocity = RangeVelocity(velocity);
   if (rangedVelocity == idleVelocity) return e_Velocity_Idle;
   else if (rangedVelocity == dribbleVelocity) return e_Velocity_Dribble;
@@ -82,7 +83,7 @@ e_Velocity FloatToEnumVelocity(float velocity) { DO_VALIDATION;
 }
 
 struct CrudeSelectionQuery {
-  CrudeSelectionQuery() { DO_VALIDATION;
+  CrudeSelectionQuery() {
     byFunctionType = false;
     byFoot = false; foot = e_Foot_Left;
     heedForcedFoot = false; strongFoot = e_Foot_Right;
@@ -146,12 +147,6 @@ struct Quadrant {
   Vector3 position;
   e_Velocity velocity;
   radian angle;
-  void ProcessState(EnvState* state) {
-    state->process(id);
-    state->process(position);
-    state->process(&velocity, sizeof(velocity));
-    state->process(angle);
-  }
 };
 
 void FillNodeMap(boost::intrusive_ptr<Node> targetNode, NodeMap &nodeMap);
@@ -160,7 +155,7 @@ class AnimCollection {
 
   public:
     // scene3D for debugging pilon
-    AnimCollection();
+    AnimCollection(boost::shared_ptr<Scene3D> scene3D);
     virtual ~AnimCollection();
 
     void Clear();
@@ -170,23 +165,23 @@ class AnimCollection {
 
     void CrudeSelection(DataSet &dataSet, const CrudeSelectionQuery &query);
 
-    inline Animation* GetAnim(int index) { DO_VALIDATION;
+    inline Animation* GetAnim(int index) {
       return animations.at(index);
     }
 
-    inline const Quadrant &GetQuadrant(int id) { DO_VALIDATION;
+    inline const Quadrant &GetQuadrant(int id) {
       return quadrants.at(id);
     }
 
     int GetQuadrantID(Animation *animation, const Vector3 &movement, radian angle) const;
-
-    void ProcessState(EnvState* state);
 
   protected:
 
     void _PrepareAnim(Animation *animation, boost::intrusive_ptr<Node> playerNode, const std::list < boost::intrusive_ptr<Object> > &bodyParts, const NodeMap &nodeMap, bool convertAngledDribbleToWalk = false);
 
     bool _CheckFunctionType(e_DefString functionType, e_FunctionType queryFunctionType) const;
+
+    boost::shared_ptr<Scene3D> scene3D;
 
     std::vector<Animation*> animations;
     std::vector<Quadrant> quadrants;

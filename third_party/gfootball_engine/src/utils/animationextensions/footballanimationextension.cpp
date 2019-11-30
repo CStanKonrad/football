@@ -15,8 +15,6 @@
 // this work is public domain. the code is undocumented, scruffy, untested, and should generally not be used for anything important.
 // i do not offer support, so don't ask. to be used for inspiration :)
 
-#include <map>
-
 #include "footballanimationextension.hpp"
 #include "../animation.hpp"
 
@@ -24,83 +22,67 @@
 
 namespace blunted {
 
-FootballAnimationExtension::FootballAnimationExtension(Animation *parent)
-    : AnimationExtension(parent) {
-  DO_VALIDATION;
-}
-
-FootballAnimationExtension::~FootballAnimationExtension() {
-  DO_VALIDATION;
-  animation.clear();
-}
-
-void FootballAnimationExtension::Shift(int fromFrame, int offset) {
-  DO_VALIDATION;
-  std::map<int, FootballKeyFrame>::iterator animIter = animation.begin();
-  std::map<int, FootballKeyFrame> newAnimation;
-
-  if (offset == 1) {
-    DO_VALIDATION;
-    while (animIter != animation.end()) {
-      DO_VALIDATION;
-      FootballKeyFrame keyFrame = animIter->second;
-      int frameNum = animIter->first;
-      if (animIter->first >= fromFrame) frameNum++;  // shift
-      newAnimation.insert(std::pair<int, FootballKeyFrame>(frameNum, keyFrame));
-      animIter++;
-    }
+  FootballAnimationExtension::FootballAnimationExtension(Animation *parent) : AnimationExtension(parent) {
   }
-  if (offset == -1) {
-    DO_VALIDATION;
-    while (animIter != animation.end()) {
-      DO_VALIDATION;
-      FootballKeyFrame keyFrame = animIter->second;
-      int frameNum = animIter->first;
-      if (animIter->first != fromFrame) {
-        DO_VALIDATION;
-        if (animIter->first > fromFrame) {
-          DO_VALIDATION;
-          frameNum--;  // shift
-        }
-        newAnimation.insert(
-            std::pair<int, FootballKeyFrame>(frameNum, keyFrame));
+
+  FootballAnimationExtension::~FootballAnimationExtension() {
+    animation.clear();
+  }
+
+  void FootballAnimationExtension::Shift(int fromFrame, int offset) {
+    std::map<int, FootballKeyFrame>::iterator animIter = animation.begin();
+    std::map<int, FootballKeyFrame> newAnimation;
+
+    if (offset == 1) {
+      while (animIter != animation.end()) {
+        FootballKeyFrame keyFrame = animIter->second;
+        int frameNum = animIter->first;
+        if (animIter->first >= fromFrame) frameNum++; // shift
+        newAnimation.insert(std::pair<int, FootballKeyFrame>(frameNum, keyFrame));
+        animIter++;
       }
+    }
+    if (offset == -1) {
+      while (animIter != animation.end()) {
+        FootballKeyFrame keyFrame = animIter->second;
+        int frameNum = animIter->first;
+        if (animIter->first != fromFrame) {
+          if (animIter->first > fromFrame) {
+            frameNum--; // shift
+          }
+          newAnimation.insert(std::pair<int, FootballKeyFrame>(frameNum, keyFrame));
+        }
+        animIter++;
+      }
+    }
+
+    animation = newAnimation;
+  }
+
+  void FootballAnimationExtension::Rotate2D(radian angle) {
+    std::map<int, FootballKeyFrame>::iterator animIter = animation.begin();
+    while (animIter != animation.end()) {
+      animIter->second.position.Rotate2D(angle);
       animIter++;
     }
+
+    //ballDirection.Rotate2D(angle);
   }
 
-  animation = newAnimation;
-}
+  void FootballAnimationExtension::Mirror() {
+    std::map<int, FootballKeyFrame>::iterator animIter = animation.begin();
+    while (animIter != animation.end()) {
+      animIter->second.position.coords[0] = -animIter->second.position.coords[0];
+      animIter++;
+    }
 
-void FootballAnimationExtension::Rotate2D(radian angle) {
-  DO_VALIDATION;
-  std::map<int, FootballKeyFrame>::iterator animIter = animation.begin();
-  while (animIter != animation.end()) {
-    DO_VALIDATION;
-    animIter->second.position.Rotate2D(angle);
-    animIter++;
+    //ballDirection.Rotate2D(angle);
   }
-
-  // ballDirection.Rotate2D(angle);
-}
-
-void FootballAnimationExtension::Mirror() {
-  DO_VALIDATION;
-  std::map<int, FootballKeyFrame>::iterator animIter = animation.begin();
-  while (animIter != animation.end()) {
-    DO_VALIDATION;
-    animIter->second.position.coords[0] = -animIter->second.position.coords[0];
-    animIter++;
-  }
-
-  // ballDirection.Rotate2D(angle);
-}
 
   bool FootballAnimationExtension::GetKeyFrame(int frame, Quaternion &orientation, Vector3 &position, float &power) const {
     std::map<int, FootballKeyFrame>::const_iterator animIter = animation.find(frame);
 
     if (animIter != animation.end()) {
-      DO_VALIDATION;
       position = animIter->second.position;
       power = animIter->second.power;
       return true;
@@ -110,14 +92,9 @@ void FootballAnimationExtension::Mirror() {
     }
   }
 
-  void FootballAnimationExtension::SetKeyFrame(int frame,
-                                               const Quaternion &orientation,
-                                               const Vector3 &position,
-                                               float power) {
-    DO_VALIDATION;
+  void FootballAnimationExtension::SetKeyFrame(int frame, const Quaternion &orientation, const Vector3 &position, float power) {
     std::map<int, FootballKeyFrame>::iterator animIter = animation.find(frame);
     if (animIter == animation.end()) {
-      DO_VALIDATION;
       // keyframe does not exist yet
       FootballKeyFrame keyFrame;
       keyFrame.orientation = orientation;
@@ -131,25 +108,21 @@ void FootballAnimationExtension::Mirror() {
       animIter->second.position = position;
       animIter->second.power = power;
     }
+
   }
 
   void FootballAnimationExtension::DeleteKeyFrame(int frame) {
-    DO_VALIDATION;
     std::map<int, FootballKeyFrame>::iterator animIter = animation.find(frame);
 
     if (animIter != animation.end()) {
-      DO_VALIDATION;
       animation.erase(animIter);
     }
   }
 
-  void FootballAnimationExtension::Load(
-      std::vector<std::string> &tokenizedLine) {
-    DO_VALIDATION;
+  void FootballAnimationExtension::Load(std::vector<std::string> &tokenizedLine) {
     animation.clear();
     unsigned int key = 2;
     while (key < tokenizedLine.size()) {
-      DO_VALIDATION;
       int frame = int(round(atoi(tokenizedLine.at(key).c_str()) * 1.0));
 
       Vector3 position;
@@ -161,10 +134,10 @@ void FootballAnimationExtension::Mirror() {
       SetKeyFrame(frame, orientation, position, 0);
       key += 4;
     }
+
   }
 
   void FootballAnimationExtension::Save(FILE *file) {
-    DO_VALIDATION;
     if (animation.size() == 0) return;
 
     std::string line;
@@ -172,7 +145,6 @@ void FootballAnimationExtension::Mirror() {
 
     std::map<int, FootballKeyFrame>::iterator animIter = animation.begin();
     while (animIter != animation.end()) {
-      DO_VALIDATION;
       line.append(int_to_str(animIter->first) + ","); // frame number
       line.append(real_to_str(animIter->second.position.coords[0]) + ","); // X pos
       line.append(real_to_str(animIter->second.position.coords[1]) + ","); // Y pos
@@ -185,11 +157,8 @@ void FootballAnimationExtension::Mirror() {
     fprintf(file, "%s\n", line.c_str());
   }
 
-  bool FootballAnimationExtension::GetFirstTouch(Vector3 &position,
-                                                 int &frame) {
-    DO_VALIDATION;
+  bool FootballAnimationExtension::GetFirstTouch(Vector3 &position, int &frame) {
     if (!animation.empty()) {
-      DO_VALIDATION;
       position = animation.begin()->second.position;
       frame = animation.begin()->first;
       return true;
@@ -202,15 +171,11 @@ void FootballAnimationExtension::Mirror() {
     return animation.size();
   }
 
-  bool FootballAnimationExtension::GetTouch(unsigned int num, Vector3 &position,
-                                            int &frame) {
-    DO_VALIDATION;
+  bool FootballAnimationExtension::GetTouch(unsigned int num, Vector3 &position, int &frame) {
     if (animation.size() > num) {
-      DO_VALIDATION;
 
       std::map<int, FootballKeyFrame>::iterator iter = animation.begin();
       for (unsigned int i = 0; i < num; i++) {
-        DO_VALIDATION;
         iter++;
         if (iter == animation.end()) return false;
       }
@@ -224,14 +189,13 @@ void FootballAnimationExtension::Mirror() {
   }
 
   bool FootballAnimationExtension::GetTouchPos(int frame, Vector3 &position) {
-    DO_VALIDATION;
     std::map<int, FootballKeyFrame>::iterator iter = animation.find(frame);
     if (iter != animation.end()) {
-      DO_VALIDATION;
       position = iter->second.position;
       return true;
     } else {
       return false;
     }
   }
+
 }

@@ -24,34 +24,33 @@ class PlayerController : public IController {
 
   public:
     PlayerController(Match *match);
-    virtual ~PlayerController() { DO_VALIDATION;};
+    virtual ~PlayerController() {};
 
     virtual void Process();
 
     virtual void SetPlayer(PlayerBase *player);
     Player *CastPlayer();
-    Team *GetTeam() { DO_VALIDATION; return team; }
-    Team *GetOppTeam() { DO_VALIDATION; return oppTeam; }
+    Team *GetTeam() { return team; }
+    Team *GetOppTeam() { return oppTeam; }
 
-    const MentalImage *GetMentalImage();
+    const MentalImage *GetMentalImage() { return _mentalImage; }
 
     virtual int GetReactionTime_ms();
 
     float GetLastSwitchBias();
 
-    float GetFadingTeamPossessionAmount() { DO_VALIDATION; return fadingTeamPossessionAmount; }
+    float GetFadingTeamPossessionAmount() { return fadingTeamPossessionAmount; }
 
-    void AddDefensiveComponent(Vector3 &desiredPosition, float bias, Player* forcedOpp = 0);
+    void AddDefensiveComponent(Vector3 &desiredPosition, float bias, int forcedOppID = -1);
     Vector3 GetDefendPosition(Player *opp, float distance = 0.0f);
 
     virtual void Reset();
-    void ProcessPlayerController(EnvState *state);
 
   protected:
     float OppBetweenBallAndMeDot();
     float CouldWinABallDuelLikeliness();
     virtual void _Preprocess();
-    virtual void _SetInput(const Vector3 &inputDirection, float inputVelocityFloat) { DO_VALIDATION; this->inputDirection = inputDirection; this->inputVelocityFloat = inputVelocityFloat; }
+    virtual void _SetInput(const Vector3 &inputDirection, float inputVelocityFloat) { this->inputDirection = inputDirection; this->inputVelocityFloat = inputVelocityFloat; }
     virtual void _KeeperDeflectCommand(PlayerCommandQueue &commandQueue, bool onlyPickupAnims = false);
     virtual void _SetPieceCommand(PlayerCommandQueue &commandQueue);
     virtual void _BallControlCommand(PlayerCommandQueue &commandQueue, bool idleTurnToOpponentGoal = false, bool knockOn = false, bool stickyRunDirection = false, bool keepCurrentBodyDirection = false);
@@ -65,7 +64,7 @@ class PlayerController : public IController {
 
     Player *_oppPlayer = nullptr;
     float _timeNeeded_ms = 0;
-    int _mentalImageTime;
+    const MentalImage *_mentalImage = nullptr;
 
     void _CalculateSituation();
 
@@ -87,6 +86,7 @@ class PlayerController : public IController {
     float possessionAmount = 0.0f;
     float teamPossessionAmount = 0.0f;
     float fadingTeamPossessionAmount = 0.0f;
+    int timeNeededToGetToBall = 0;
     int oppTimeNeededToGetToBall = 0;
     bool hasBestChanceOfPossession = false;
 };

@@ -31,8 +31,6 @@
 
 namespace blunted {
 
-  class Node;
-
   enum e_LocalMode {
     e_LocalMode_Relative,
     e_LocalMode_Absolute
@@ -66,12 +64,11 @@ namespace blunted {
       virtual void Exit() = 0;
 
       void SetLocalMode(e_LocalMode localMode);
-      e_LocalMode GetLocalMode();
 
       void SetName(const std::string &name);
       virtual const std::string GetName() const;
 
-      void SetParent(Node *parent);
+      void SetParent(Spatial *parent);
 
       virtual void SetPosition(const Vector3 &newPosition, bool updateSpatialData = true);
       virtual Vector3 GetPosition() const;
@@ -96,13 +93,16 @@ namespace blunted {
     protected:
       std::string name;
 
-      Node *parent;
+      Spatial *parent;
+
+      //mutable boost::mutex spatialMutex;
 
       Vector3 position;
       Quaternion rotation;
       Vector3 scale;
 
       // cache
+      //mutable boost::mutex cacheMutex;
       mutable bool _dirty_DerivedPosition = false;
       mutable bool _dirty_DerivedRotation = false;
       mutable bool _dirty_DerivedScale = false;

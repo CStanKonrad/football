@@ -20,12 +20,13 @@
 
 namespace blunted {
 
-Command::Command() { DO_VALIDATION; }
+  Command::Command(const std::string &name) : name(name) {
+  }
 
-Command::~Command() { DO_VALIDATION; }
+  Command::~Command() {
+  }
 
-bool Command::Handle(void *caller) {
-  DO_VALIDATION;
-  return Execute();
-}
+  bool Command::Handle(void *caller) {
+    return Execute(caller);
+  }
 }

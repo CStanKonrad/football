@@ -20,6 +20,7 @@
 
 #include "../../defines.hpp"
 
+#include "../../systems/isystemtask.hpp"
 #include "rendering/interface_renderer3d.hpp"
 #include "rendering/r3d_messages.hpp"
 
@@ -29,17 +30,32 @@ namespace blunted {
 
   class GraphicsSystem;
 
-  class GraphicsTask {
+  class GraphicsTask : public ISystemTask {
 
     public:
       GraphicsTask(GraphicsSystem *system);
-      ~GraphicsTask();
-      void Render(bool swap_buffer);
+      virtual ~GraphicsTask();
+
+      virtual void operator()() {}
+
     protected:
-      bool Execute(boost::intrusive_ptr<Camera> camera);
-      void EnqueueShadowMap(boost::intrusive_ptr<Camera> camera, boost::intrusive_ptr<Light> light);
+      void GetPhase();
+      void ProcessPhase();
+      void PutPhase();
 
       GraphicsSystem *graphicsSystem;
+  };
+
+  class GraphicsTaskCommand_EnqueueView : public Command {
+
+    public:
+      GraphicsTaskCommand_EnqueueView(boost::intrusive_ptr<Camera> camera) : Command("EnqueueView"), camera(camera) {};
+
+    protected:
+      virtual bool Execute(void *caller = NULL);
+      virtual void EnqueueShadowMap(boost::intrusive_ptr<Light> light);
+
+      boost::intrusive_ptr<Camera> camera;
   };
 }
 
