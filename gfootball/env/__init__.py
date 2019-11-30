@@ -236,6 +236,5 @@ def create_remote_environment(
       username, token, model_name=model_name, track=track,
       include_rendering=include_rendering)
   env = _apply_output_wrappers(
-      env, rewards, representation, channel_dimensions,
-      env._config.number_of_players_agent_controls() == 1, stacked)
+      env, rewards, representation, channel_dimensions, True, stacked)
   return env

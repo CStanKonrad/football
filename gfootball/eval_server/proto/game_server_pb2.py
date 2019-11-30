@@ -34,7 +34,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='gfootball.eval_server',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n-gfootball/eval_server/proto/game_server.proto\x12\x15gfootball.eval_server\"q\n\x13GetEnvResultRequest\x12\x14\n\x0cgame_version\x18\x01 \x01(\t\x12\x0f\n\x07game_id\x18\x02 \x01(\t\x12\x10\n\x08username\x18\x03 \x01(\t\x12\r\n\x05token\x18\x04 \x01(\t\x12\x12\n\nmodel_name\x18\x05 \x01(\t\"*\n\x14GetEnvResultResponse\x12\x12\n\nenv_result\x18\x01 \x01(\x0c\"\x8e\x01\n\x0bStepRequest\x12\x14\n\x0cgame_version\x18\x01 \x01(\t\x12\x0f\n\x07game_id\x18\x02 \x01(\t\x12\x10\n\x08username\x18\x03 \x01(\t\x12\r\n\x05token\x18\x04 \x01(\t\x12\x0e\n\x06\x61\x63tion\x18\x05 \x01(\x05\x12\x12\n\nmodel_name\x18\x06 \x01(\t\x12\x13\n\x0b\x61\x63tion_list\x18\x07 \x03(\x05\"\"\n\x0cStepResponse\x12\x12\n\nenv_result\x18\x01 \x01(\x0c\"\x14\n\x12GetCapacityRequest\"1\n\x13GetCapacityResponse\x12\x1a\n\x12\x63\x61pacity_for_games\x18\x01 \x01(\x05\"y\n\x11\x43reateGameRequest\x12\x0f\n\x07game_id\x18\x01 \x01(\t\x12\x13\n\x0bleft_player\x18\x02 \x01(\t\x12\x14\n\x0cright_player\x18\x03 \x01(\t\x12\x19\n\x11include_rendering\x18\x04 \x01(\x08\x12\r\n\x05track\x18\x05 \x01(\t\"\x14\n\x12\x43reateGameResponse2\x97\x03\n\nGameServer\x12i\n\x0cGetEnvResult\x12*.gfootball.eval_server.GetEnvResultRequest\x1a+.gfootball.eval_server.GetEnvResultResponse\"\x00\x12Q\n\x04Step\x12\".gfootball.eval_server.StepRequest\x1a#.gfootball.eval_server.StepResponse\"\x00\x12\x66\n\x0bGetCapacity\x12).gfootball.eval_server.GetCapacityRequest\x1a*.gfootball.eval_server.GetCapacityResponse\"\x00\x12\x63\n\nCreateGame\x12(.gfootball.eval_server.CreateGameRequest\x1a).gfootball.eval_server.CreateGameResponse\"\x00\x62\x06proto3')
+  serialized_pb=_b('\n-gfootball/eval_server/proto/game_server.proto\x12\x15gfootball.eval_server\"q\n\x13GetEnvResultRequest\x12\x14\n\x0cgame_version\x18\x01 \x01(\t\x12\x0f\n\x07game_id\x18\x02 \x01(\t\x12\x10\n\x08username\x18\x03 \x01(\t\x12\r\n\x05token\x18\x04 \x01(\t\x12\x12\n\nmodel_name\x18\x05 \x01(\t\"*\n\x14GetEnvResultResponse\x12\x12\n\nenv_result\x18\x01 \x01(\x0c\"y\n\x0bStepRequest\x12\x14\n\x0cgame_version\x18\x01 \x01(\t\x12\x0f\n\x07game_id\x18\x02 \x01(\t\x12\x10\n\x08username\x18\x03 \x01(\t\x12\r\n\x05token\x18\x04 \x01(\t\x12\x0e\n\x06\x61\x63tion\x18\x05 \x01(\x05\x12\x12\n\nmodel_name\x18\x06 \x01(\t\"\"\n\x0cStepResponse\x12\x12\n\nenv_result\x18\x01 \x01(\x0c\"\x14\n\x12GetCapacityRequest\"1\n\x13GetCapacityResponse\x12\x1a\n\x12\x63\x61pacity_for_games\x18\x01 \x01(\x05\"j\n\x11\x43reateGameRequest\x12\x0f\n\x07game_id\x18\x01 \x01(\t\x12\x13\n\x0bleft_player\x18\x02 \x01(\t\x12\x14\n\x0cright_player\x18\x03 \x01(\t\x12\x19\n\x11include_rendering\x18\x04 \x01(\x08\"\x14\n\x12\x43reateGameResponse2\x97\x03\n\nGameServer\x12i\n\x0cGetEnvResult\x12*.gfootball.eval_server.GetEnvResultRequest\x1a+.gfootball.eval_server.GetEnvResultResponse\"\x00\x12Q\n\x04Step\x12\".gfootball.eval_server.StepRequest\x1a#.gfootball.eval_server.StepResponse\"\x00\x12\x66\n\x0bGetCapacity\x12).gfootball.eval_server.GetCapacityRequest\x1a*.gfootball.eval_server.GetCapacityResponse\"\x00\x12\x63\n\nCreateGame\x12(.gfootball.eval_server.CreateGameRequest\x1a).gfootball.eval_server.CreateGameResponse\"\x00\x62\x06proto3')
 )
 
 
@@ -179,13 +179,6 @@ _STEPREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='action_list', full_name='gfootball.eval_server.StepRequest.action_list', index=6,
-      number=7, type=5, cpp_type=1, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -198,8 +191,8 @@ _STEPREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=232,
-  serialized_end=374,
+  serialized_start=231,
+  serialized_end=352,
 )
 
 
@@ -229,8 +222,8 @@ _STEPRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=376,
-  serialized_end=410,
+  serialized_start=354,
+  serialized_end=388,
 )
 
 
@@ -253,8 +246,8 @@ _GETCAPACITYREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=412,
-  serialized_end=432,
+  serialized_start=390,
+  serialized_end=410,
 )
 
 
@@ -284,8 +277,8 @@ _GETCAPACITYRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=434,
-  serialized_end=483,
+  serialized_start=412,
+  serialized_end=461,
 )
 
 
@@ -324,13 +317,6 @@ _CREATEGAMEREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='track', full_name='gfootball.eval_server.CreateGameRequest.track', index=4,
-      number=5, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -343,8 +329,8 @@ _CREATEGAMEREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=485,
-  serialized_end=606,
+  serialized_start=463,
+  serialized_end=569,
 )
 
 
@@ -367,8 +353,8 @@ _CREATEGAMERESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=608,
-  serialized_end=628,
+  serialized_start=571,
+  serialized_end=591,
 )
 
 DESCRIPTOR.message_types_by_name['GetEnvResultRequest'] = _GETENVRESULTREQUEST
@@ -445,8 +431,8 @@ _GAMESERVER = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=631,
-  serialized_end=1038,
+  serialized_start=594,
+  serialized_end=1001,
   methods=[
   _descriptor.MethodDescriptor(
     name='GetEnvResult',
